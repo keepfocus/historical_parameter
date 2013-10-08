@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   s.email       = ["jasp@keepfocus.dk"]
   s.homepage    = "http://github.com/keepfocus/historical_parameter"
   s.summary     = "System for having historically changing attributes in rails"
-  s.description = "Create model attributes that can change over time where history must be preserved. Uses a separate model to handle storing the data."
+  s.description = "Create model attributes that can change over time where history must be preserved. Uses a separate model to handle storing the data. Example use for tracking the price of a kWh of electricity."
 
   s.files = Dir["{app,config,db,lib}/**/*"] + ["MIT-LICENSE", "Rakefile", "README.rdoc"]
   s.test_files = Dir["test/**/*"]
