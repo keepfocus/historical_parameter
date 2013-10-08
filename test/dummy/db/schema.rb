@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131007112741) do
+ActiveRecord::Schema.define(:version => 20131008061638) do
 
   create_table "historical_parameters", :force => true do |t|
     t.datetime "valid_from"
@@ -26,6 +26,7 @@ ActiveRecord::Schema.define(:version => 20131007112741) do
   create_table "installations", :force => true do |t|
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+    t.string   "name"
   end
 
 end
