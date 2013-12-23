@@ -30,15 +30,17 @@ class HistoricalControllerAddonsTest < ActionController::TestCase
 
   test "Update works for save new state" do
     @installation = Installation.create(:name => "original")
+    assert_equal 0, Installation.find(@installation.to_param).area_history.count
     put :update, :id => @installation.to_param, :installation => {
-      :area_history_attributes => [
-        {:value => 42, :valid_from => Time.zone.local(2010, 1, 1)},
-        {:value => 42, :valid_from => Time.zone.local(2010, 2, 1)}
-      ],
+      :area_history_attributes => {
+        '1234567' => {:value => 42, :valid_from => Time.zone.local(2010, 1, 1)},
+        '1234568' => {:value => 43, :valid_from => Time.zone.local(2010, 2, 1)}
+      } ,
       :name => "changed"
     }
     assert_redirected_to installation_path(@installation)
     assert_equal "changed", Installation.find(@installation.to_param).name
-    assert_equal 42, Installation.find(@installation.to_param).area
+    assert_equal 43, Installation.find(@installation.to_param).area
+    assert_equal 2, Installation.find(@installation.to_param).area_history.count
   end
 end
