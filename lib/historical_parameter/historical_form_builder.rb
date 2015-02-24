@@ -42,14 +42,15 @@ module HistoricalParameter
 
     def history_edit_table_for(parameter, options = {})
       method = :"#{parameter}_history"
+      rows = self.object.send(method).order('valid_from DESC')
       @template.content_tag :table, :id => "#{method}_table" do
         @template.content_tag :tbody do
           o = @template.content_tag :tr do
             @template.content_tag(:th, options[:value_heading] || I18n.t('acts_as_historical_parameter.value', :default =>"Value")) +
             @template.content_tag(:th, options[:valid_from_heading] || I18n.t('acts_as_historical_parameter.valid_from', :default => "Valid from"))
           end
-          o += self.fields_for method do |b|
-            @template.concat b.historical_value_fields options
+          o += self.fields_for(method, rows) do |b|
+            @template.concat b.historical_value_fields(options)
           end
           o
         end
