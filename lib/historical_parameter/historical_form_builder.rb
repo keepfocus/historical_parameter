@@ -27,9 +27,9 @@ module HistoricalParameter
         end
         o += @template.content_tag :td do
           if options[:show_time]
-            self.datetime_select(:valid_from, start_year: 2000)
+            self.datetime_select(:valid_from, start_year: 1978)
           else
-            self.date_select(:valid_from, start_year: 2000)
+            self.date_select(:valid_from, start_year: 1978)
           end
         end
         o += @template.content_tag :td, :class => "destroy_historical_value" do
