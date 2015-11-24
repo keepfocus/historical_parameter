@@ -7,7 +7,8 @@ module HistoricalParameter
 
     def historical_form_for(*args, &block)
       options = args.extract_options!
-      options[:builder] = HistoricalFormBuilder
+      options[:builder] = options[:builder].constantize unless options[:builder].blank?
+      options[:builder] ||= HistoricalFormBuilder
       output = form_for(*args << options, &block)
       if @after_historical_form_callbacks
         fields = @after_historical_form_callbacks.each do |callback|
