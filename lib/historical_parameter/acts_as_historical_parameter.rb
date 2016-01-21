@@ -9,7 +9,7 @@ module HistoricalParameter
       def define_historical_getter(name)
         class_eval <<-EOM
           def #{name}
-            @#{name} ||= #{name}_history.first :order => "valid_from DESC"
+            @#{name} ||= #{name}_history.order('valid_from DESC').first
             @#{name}.value if @#{name}
           end
         EOM
@@ -19,7 +19,7 @@ module HistoricalParameter
         class_eval <<-EOM
           def set_#{name}(value, from)
             if value
-              @#{name} = #{name}_history.build :valid_from => from, :value => value
+              @#{name} = #{name}_history.build valid_from: from, value: value
             end
           end
           def #{name}=(value)
@@ -31,7 +31,7 @@ module HistoricalParameter
       def define_historical_values(name)
         class_eval <<-EOM
           def #{name}_values
-            hps = #{name}_history.all(:order => "valid_from")
+            hps = #{name}_history.order('valid_from')
             values = []
             if hps.length >= 2
               values = hps.each_cons(2).collect do |a|
@@ -80,8 +80,8 @@ module HistoricalParameter
       def acts_as_historical_parameter(name, ident)
         ass_sym = "#{name}_history".to_sym
         attr_sym = "#{ass_sym}_attributes".to_sym
-        has_many ass_sym, :as => :parameterized, :class_name => "HistoricalParameter::HistoricalParameter", :conditions => {:ident => ident}
-        accepts_nested_attributes_for ass_sym, :allow_destroy => true
+        has_many ass_sym, -> { where ident: ident }, as: :parameterized, class_name: "HistoricalParameter::HistoricalParameter"
+        accepts_nested_attributes_for ass_sym, allow_destroy: true
         unless defined?(ActiveModel::ForbiddenAttributesProtection) and included_modules.include?(ActiveModel::ForbiddenAttributesProtection)
           attr_accessible attr_sym
         end

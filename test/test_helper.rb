@@ -1,10 +1,10 @@
 # Configure Rails Environment
 ENV["RAILS_ENV"] = "test"
 
-require File.expand_path("../dummy/config/environment.rb",  __FILE__)
+require File.expand_path("../../test/dummy/config/environment.rb",  __FILE__)
+ActiveRecord::Migrator.migrations_paths = [File.expand_path("../../test/dummy/db/migrate", __FILE__)]
 require "rails/test_help"
 require 'rr'
-require 'strong_parameters'
 $:.push File.expand_path("../lib", __FILE__)
 
 # Maintain your gem's version:
@@ -23,11 +23,10 @@ Gem::Specification.new do |s|
   s.files = Dir["{app,config,db,lib}/**/*"] + ["MIT-LICENSE", "Rakefile", "README.rdoc"]
   s.test_files = Dir["test/**/*"]
 
-  s.add_dependency "rails", "~> 3.2.14"
+  s.add_dependency "rails", "~> 4.2.5"
 
   s.add_development_dependency "sqlite3"
   s.add_development_dependency "rr"
-  s.add_development_dependency "strong_parameters"
 end
 
 Rails.backtrace_cleaner.remove_silencers!
@@ -36,6 +35,8 @@ Rails.backtrace_cleaner.remove_silencers!
 Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |f| require f }
 
 # Load fixtures from the engine
-if ActiveSupport::TestCase.method_defined?(:fixture_path=)
+if ActiveSupport::TestCase.respond_to?(:fixture_path=)
   ActiveSupport::TestCase.fixture_path = File.expand_path("../fixtures", __FILE__)
+  ActionDispatch::IntegrationTest.fixture_path = ActiveSupport::TestCase.fixture_path
+  ActiveSupport::TestCase.fixtures :all
 end

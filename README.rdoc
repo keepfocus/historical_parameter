@@ -51,4 +51,4 @@ IceCreams from before will look like:
     <%= f.new_history_value_button :price %>
   <% end %>
 
-Copyright (c) 2010-2013 KeepFocus A/S, released under the MIT license
+Copyright (c) 2010-2016 KeepFocus A/S, released under the MIT license

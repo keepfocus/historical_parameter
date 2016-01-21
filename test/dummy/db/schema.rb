@@ -9,30 +9,30 @@
 # from scratch. The latter is a flawed and unsustainable approach (the more migrations
 # you'll amass, the slower it'll run and the greater likelihood for issues).
 #
-# It's strongly recommended to check this file into your version control system.
+# It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131223144213) do
+ActiveRecord::Schema.define(version: 20131223144213) do
 
-  create_table "historical_parameters", :force => true do |t|
+  create_table "historical_parameters", force: :cascade do |t|
     t.datetime "valid_from"
     t.integer  "ident"
     t.float    "value"
     t.integer  "parameterized_id"
     t.string   "parameterized_type"
-    t.datetime "created_at",         :null => false
-    t.datetime "updated_at",         :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
-  create_table "installations", :force => true do |t|
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+  create_table "installations", force: :cascade do |t|
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.string   "name"
   end
 
-  create_table "strong_parameter_installations", :force => true do |t|
+  create_table "strong_parameter_installations", force: :cascade do |t|
     t.string   "name"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
 end
