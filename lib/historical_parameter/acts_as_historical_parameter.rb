@@ -56,19 +56,12 @@ module HistoricalParameter
         class_eval <<-EOM
           def #{name}_sum(start_time, end_time)
             #{name}_values.sum do |entry|
-              if entry[1] and start_time < entry[1]
-                stop = entry[1] < end_time ? entry[1] : end_time
-                if start_time > entry[0]
-                  yield start_time, stop, entry[2]
-                else
-                  yield entry[0], stop, entry[2]
-                end
-              elsif entry[1].nil? and end_time > entry[0]
-                if start_time > entry[0]
-                  yield start_time, end_time, entry[2]
-                else
-                  yield entry[0], end_time, entry[2]
-                end
+              latest_start_time = [entry[0], start_time].max
+              earliest_end_time = [entry[1] || end_time, end_time].min
+
+              # Yield value if requested time range overlaps history time range either fully or partially
+              if entry[0] < end_time && (entry[1].nil? || start_time < entry[1])
+                yield latest_start_time, earliest_end_time, entry[2]
               else
                 0
               end

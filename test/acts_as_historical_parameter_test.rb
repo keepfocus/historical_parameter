@@ -34,8 +34,8 @@ class ActsAsHistoricalParameterTest < ActiveSupport::TestCase
 
   test "callback history within timeslot for area #1" do
     installation = Installation.new
-    installation.set_area(42, Time.zone.local(2010, 1, 1))
-    installation.set_area(43, Time.zone.local(2010, 2, 1))
+    installation.set_area(10, Time.zone.local(2010, 1, 1))
+    installation.set_area(20, Time.zone.local(2010, 2, 1))
     installation.save
     dummy = Object.new
     mock(dummy).calculate(Time.zone.local(2010, 1, 1), Time.zone.local(2010, 2, 1)) {1}
@@ -43,7 +43,7 @@ class ActsAsHistoricalParameterTest < ActiveSupport::TestCase
     result = installation.area_sum(Time.zone.local(2010, 1, 1), Time.zone.local(2010, 3, 1)) do |t1, t2, value|
       dummy.calculate(t1, t2) * value
     end
-    assert_equal 1*42 + 2*43, result
+    assert_equal 1*10 + 2*20, result
   end
 
   test "callback history within timeslot for area #2" do
@@ -130,6 +130,22 @@ class ActsAsHistoricalParameterTest < ActiveSupport::TestCase
           {:id => installation.area_history.first.id, :_destroy => true}
         ]
       })
+    end
+  end
+
+  test "history sum will not yield an invalid period" do
+    installation = Installation.new
+    installation.set_area(10, Time.zone.local(2010, 01, 01))
+    installation.set_area(20, Time.zone.local(2011, 01, 01))
+    installation.set_area(30, Time.zone.local(2012, 01, 01))
+    installation.set_area(40, Time.zone.local(2013, 01, 01))
+    installation.set_area(50, Time.zone.local(2014, 01, 01))
+    installation.set_area(60, Time.zone.local(2015, 01, 01))
+    installation.save
+    start_time = DateTime.new(2013,1,1)
+    result = installation.area_sum(start_time, start_time + 1.month) do |t1, t2, value|
+      assert_operator t2, :>=, t1
+      0
     end
   end
 
