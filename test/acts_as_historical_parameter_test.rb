@@ -133,4 +133,20 @@ class ActsAsHistoricalParameterTest < ActiveSupport::TestCase
     end
   end
 
+  test "history sum will not yield an invalid period" do
+    installation = Installation.new
+    installation.set_area(10, Time.zone.local(2010, 01, 01))
+    installation.set_area(20, Time.zone.local(2011, 01, 01))
+    installation.set_area(30, Time.zone.local(2012, 01, 01))
+    installation.set_area(40, Time.zone.local(2013, 01, 01))
+    installation.set_area(50, Time.zone.local(2014, 01, 01))
+    installation.set_area(60, Time.zone.local(2015, 01, 01))
+    installation.save
+    start_time = DateTime.new(2013,1,1)
+    result = installation.area_sum(start_time, start_time + 1.month) do |t1, t2, value|
+      assert_operator t2, :>=, t1
+      0
+    end
+  end
+
 end
