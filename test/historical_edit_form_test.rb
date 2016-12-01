@@ -12,7 +12,7 @@ class HistoricalEditFormTest < ActiveSupport::TestCase
     stub(@template).installation_path { "" }
     stub(@template).installations_path { "" }
     stub(@template).protect_against_forgery? { false }
-  end  
+  end
 
   test "historical_form_for creates form" do
     output = @template.historical_form_for(Installation.new) {}
@@ -25,7 +25,7 @@ class HistoricalEditFormTest < ActiveSupport::TestCase
     output = @template.historical_form_for(Installation.new) {}
     assert output.include? "123456"
   end
-  
+
   test "after_historical_form content comes after form" do
     @template.after_historical_form { @template.content_tag :span, "1", :id => "before" }
     output = @template.historical_form_for(Installation.new) {
@@ -69,6 +69,7 @@ class HistoricalEditFormTest < ActiveSupport::TestCase
   test "history_edit_table_for should create table for editing values over time" do
     installation = Installation.new
     installation.area_history.build :value => 42, :valid_from => Time.zone.local(2010, 8, 1)
+    installation.save
     output = @template.historical_form_for(installation) { |f|
       f.history_edit_table_for :area
     }
@@ -91,6 +92,7 @@ class HistoricalEditFormTest < ActiveSupport::TestCase
   test "history_edit_table_for should allow time edit if requested" do
     installation = Installation.new
     installation.area_history.build :value => 42, :valid_from => Time.zone.local(2010, 8, 1)
+    installation.save
     output = @template.historical_form_for(installation) { |f|
       f.history_edit_table_for :area, :show_time => true
     }
@@ -161,6 +163,7 @@ class HistoricalEditFormTest < ActiveSupport::TestCase
   test "history_edit_table_for should have default remove label if no translation present" do
     installation = Installation.new
     installation.area_history.build :value => 42, :valid_from => Time.zone.local(2010, 8, 1)
+    installation.save
     output = @template.historical_form_for(installation) { |f|
       f.history_edit_table_for :area
     }
@@ -175,6 +178,7 @@ class HistoricalEditFormTest < ActiveSupport::TestCase
     I18n.backend.store_translations :en, :acts_as_historical_parameter => {:destroy_label => "Slet værdi"}
     installation = Installation.new
     installation.area_history.build :value => 42, :valid_from => Time.zone.local(2010, 8, 1)
+    installation.save
     output = @template.historical_form_for(installation) { |f|
       f.history_edit_table_for :area
     }
@@ -188,6 +192,7 @@ class HistoricalEditFormTest < ActiveSupport::TestCase
   test "history_edit_table_for should support forced remove label" do
     installation = Installation.new
     installation.area_history.build :value => 42, :valid_from => Time.zone.local(2010, 8, 1)
+    installation.save
     output = @template.historical_form_for(installation) { |f|
       f.history_edit_table_for :area, :remove_label => "Slet areal værdi"
     }
@@ -203,6 +208,7 @@ class HistoricalEditFormTest < ActiveSupport::TestCase
     I18n.backend.store_translations :en, :acts_as_historical_parameter => {:valid_from => "Gælder fra"}
     installation = Installation.new
     installation.area_history.build :value => 42, :valid_from => Time.zone.local(2010, 8, 1)
+    installation.save
     output = @template.historical_form_for(installation) { |f|
       f.history_edit_table_for :area
     }
@@ -216,6 +222,7 @@ class HistoricalEditFormTest < ActiveSupport::TestCase
   test "history_edit_table_for should support forced headings in table" do
     installation = Installation.new
     installation.area_history.build :value => 42, :valid_from => Time.zone.local(2010, 8, 1)
+    installation.save
     output = @template.historical_form_for(installation) { |f|
       f.history_edit_table_for :area, :value_heading => "Areal", :valid_from_heading => "Gælder fra"
     }
