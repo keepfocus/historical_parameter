@@ -17,9 +17,9 @@ module HistoricalParameter
 
       def define_historical_setter(name)
         class_eval <<-EOM
-          def set_#{name}(value, from)
+          def set_#{name}(value, from, comment='')
             if value
-              @#{name} = #{name}_history.build :valid_from => from, :value => value
+              @#{name} = #{name}_history.build :valid_from => from, :value => value, :comment => comment
             end
           end
           def #{name}=(value)
