@@ -73,7 +73,7 @@ module HistoricalParameter
       def acts_as_historical_parameter(name, ident)
         ass_sym = "#{name}_history".to_sym
         attr_sym = "#{ass_sym}_attributes".to_sym
-        has_many ass_sym, :as => :parameterized, :class_name => "HistoricalParameter::HistoricalParameter", :conditions => {:ident => ident}
+        has_many ass_sym, :as => :parameterized, :class_name => "HistoricalParameter::HistoricalParameter", :conditions => "ident = #{ident}"
         accepts_nested_attributes_for ass_sym, :allow_destroy => true
         unless defined?(ActiveModel::ForbiddenAttributesProtection) and included_modules.include?(ActiveModel::ForbiddenAttributesProtection)
           attr_accessible attr_sym
