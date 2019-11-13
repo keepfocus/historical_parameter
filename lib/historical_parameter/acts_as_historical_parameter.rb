@@ -15,11 +15,11 @@ module HistoricalParameter
         EOM
       end
 
-      def define_historical_setter(name)
+      def define_historical_setter(name, ident)
         class_eval <<-EOM
           def set_#{name}(value, from, comment='')
             if value
-              @#{name} = #{name}_history.build :valid_from => from, :value => value, :comment => comment
+              @#{name} = #{name}_history.build :ident => ident, :valid_from => from, :value => value, :comment => comment
             end
           end
           def #{name}=(value)
@@ -79,7 +79,7 @@ module HistoricalParameter
           attr_accessible attr_sym
         end
         define_historical_getter(name)
-        define_historical_setter(name)
+        define_historical_setter(name, ident)
         define_historical_values(name)
         define_historical_sum(name)
       end
